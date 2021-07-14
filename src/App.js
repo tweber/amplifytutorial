@@ -22,12 +22,14 @@ function App() {
 
   async function createNote() {
     if (!formData.name || !formData.description) return;
-    await API.graphql({ query: createNoteMutation, variables: { input: formData } });
-    setNotes([ ...notes, formData ]);
+    const response = await API.graphql({ query: createNoteMutation, variables: { input: formData } });
+    const note = response.data.createNote;
+    setNotes([ ...notes, note ]);
     setFormData(initialFormState);
   }
 
   async function deleteNote({ id }) {
+    console.log('delete note with id', id);
     const newNotesArray = notes.filter(note => note.id !== id);
     setNotes(newNotesArray);
     await API.graphql({ query: deleteNoteMutation, variables: { input: { id } }});
